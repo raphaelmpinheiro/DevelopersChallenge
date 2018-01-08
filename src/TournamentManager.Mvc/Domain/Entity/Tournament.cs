@@ -32,7 +32,11 @@ namespace TournamentManager.Mvc.Domain.Entity
         /// <returns>Team winner</returns>
         public Team GetWinnerTournament()
         {
-            return _rounds.Last().GetWinners().FirstOrDefault();
+            if (_rounds.Length > 0)
+            {
+                return _rounds.Last().GetWinners().FirstOrDefault();
+            }
+            return null;
         }
 
         public void PutRound(Round roundEdited)
@@ -71,15 +75,13 @@ namespace TournamentManager.Mvc.Domain.Entity
             List<Round> rounds = new List<Round>();
             var teamsTemporary = teams;
             int i = 0;
-            do
+            while (teamsTemporary.Count > 1)
             {
                 var round = new Round(teamsTemporary, i);
                 rounds.Add(round);
                 teamsTemporary = round.GetWinners();
                 i++;
             }
-            while (teamsTemporary.Count > 1);
-
             return rounds.ToArray();
         }
     }
