@@ -1,0 +1,38 @@
+﻿@model TournamentManager.Mvc.Models.TournamentModel
+
+@{
+    ViewData["Title"] = "Tournament";
+}
+
+<h2>Tournament</h2>
+
+@if (Model.Round.Count == 0)
+{
+    <h3>There are no teams registered. Click <a asp-controller="Team" asp-action="Index">here</a> to register</h3>
+}
+else
+{
+    <main id="tournament">
+        @foreach (var item in Model.Round)
+        {
+            <ul class="round round-@item.RoundNumber">
+                <li class="spacer">&nbsp;</li>
+                @foreach (var fight in item.Fight)
+                {
+                    <li class="game game-top"><a href="/Tournament/SetWinner/?teamId=@fight.Team1.Id&roundId=@item.RoundNumber">@fight.Team1.Kingdom</a></li>
+                    <li class="game game-spacer">&nbsp;</li>
+                    <li class="game game-bottom "><a href="/Tournament/SetWinner/?teamId=@fight.Team2.Id&roundId=@item.RoundNumber">@fight.Team2.Kingdom</a></li>
+                    <li class="spacer">&nbsp;</li>
+                }
+            </ul>
+        }
+    </main>
+}
+@if (!string.IsNullOrEmpty(Model.Winner))
+{
+    <h3>Winner: @Model.Winner</h3>
+}
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
